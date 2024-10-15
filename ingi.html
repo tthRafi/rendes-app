@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interaktív Terminál</title>
+    <style>
+        body {
+            background-color: black;
+            color: #00ff00;
+            font-family: "Courier New", Courier, monospace;
+            white-space: pre-wrap;
+            padding: 20px;
+        }
+        #output {
+            margin-bottom: 20px;
+        }
+        #nyeremeny {
+            display: none;
+            font-size: 2em;
+            color: #ff00ff;
+            margin-top: 20px;
+            text-align: center;
+        }
+        input[type="text"] {
+            background-color: black;
+            color: #00ff00;
+            border: none;
+            font-family: "Courier New", Courier, monospace;
+            font-size: 16px;
+            outline: none;
+            width: 100%;
+        }
+        img {
+            display: none;
+            margin-top: 20px;
+            max-width: 300px;  /* Kép maximális szélessége */
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div id="output">Cl0ckbreak3r: Üdvözöllek a forradalomban... Használd a "segítség" kódot 
+        Utolsó feladványodban, megkell majd fejtened az alábbi kódot... ide viszont csak akkor tudsz eljutni, ha az összes kérdést megválaszolod
+    </div>
+    <input type="text" id="terminalInput" autofocus placeholder="Ide írj..." onkeydown="kezelInput(event)">
+    <img id="kodKep" src="kod.png" alt="Titkos kód képe">
+    <div id="nyeremeny">Gratulálok, a nyereménye hát simogatás a hétvégén:3</div>
+    
+    <script>
+        const outputDiv = document.getElementById('output');
+        const kep = document.getElementById('gyerekekKep');
+        const kodKep = document.getElementById('kodKep');
+        const nyeremenyDiv = document.getElementById('nyeremeny');
+        let helyesValaszok = 0; // Helyes válaszok száma
+
+        function kezelInput(event) {
+            if (event.key === 'Enter') {
+                const input = event.target.value;
+                outputDiv.innerHTML += `<br> > ${input}`;
+                event.target.value = ''; // input mező törlése
+                parancsFeldolgozas(input);
+            }
+        }
+
+        function parancsFeldolgozas(input) {
+            // Parancsfeldolgozás logikája
+            if (input.toLowerCase() === 'segítség') {
+                irjKiSzoveg("Elérhető parancsok: segítség, start, info");
+            } else if (input.toLowerCase() === 'start') {
+                irjKiSzoveg("Szia kedvesem...\nHa nem oldod meg ezt a rejtvényt, nem lesz simogatás a hátadon hétvégén\n\"Who am I?\"");
+            } else if (helyesValaszok === 0 && input.toLowerCase() === 'ronaldo') {
+                irjKiSzoveg("Szerencsés ember vagy.....\nHe is the best at Cross.\nHis name is....");
+                helyesValaszok++; // Első válasz helyes
+            } else if (helyesValaszok === 1 && input.toLowerCase() === 'tony kroos') {
+                irjKiSzoveg("Helyes válasz!\nMost egy titkos kódot kell megfejtened...\nA kód itt van:");
+                kodKep.style.display = 'block';  // Titkos kód képe megjelenik
+                helyesValaszok++; // Második válasz helyes
+            } else if (helyesValaszok === 2 && input.toLowerCase() === 'szeretlek szerelmem') {
+                irjKiSzoveg("Gratulálok, megfejtetted a kódot!");
+                kodKep.style.display = 'none'; // Titkos kód eltüntetése
+                nyeremenyDiv.style.display = 'block'; // Nyeremény üzenet megjelenítése
+                kep.style.display = 'block'; // Kép megjelenítése csak a végén
+                helyesValaszok++; // Harmadik válasz helyes
+            } else {
+                irjKiSzoveg("-- Nem, próbáld újra--");
+            }
+
+            // Ha mindhárom kérdésre válaszolt, a gyerekek.png megjelenítése
+            if (helyesValaszok === 3) {
+                kep.style.display = 'block'; // Kép megjelenítése
+            }
+        }
+
+        function irjKiSzoveg(szoveg) {
+            let karakterIndex = 0;
+            outputDiv.innerHTML += '<br>'; // Új sor kezdése
+            const sor = setInterval(() => {
+                if (karakterIndex < szoveg.length) {
+                    outputDiv.innerHTML += szoveg.charAt(karakterIndex);
+                    karakterIndex++;
+                } else {
+                    clearInterval(sor);
+                }
+            }, 50); // Betűnkénti megjelenítés sebessége (50 ms)
+        }
+    </script>
+</body>
+</html>
